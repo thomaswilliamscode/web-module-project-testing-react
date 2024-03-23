@@ -33,26 +33,41 @@ describe('Episode component', () => {
 
   })
   test("renders texts and alt texts correctly", () => {
-    // 👉 TASK: render the component passing episode data and getting the rerender utility
-    const { rerender } = render(<Episode episode={exampleEpisodeData} />);
+		// 👉 TASK: render the component passing episode data and getting the rerender utility
+		const { rerender } = render(<Episode episode={exampleEpisodeData} />);
 
-    // 👉 TASK: check that the summary renders to the DOM
-    const episodeInfo = screen.getByTestId('summary');
+		// 👉 TASK: check that the summary renders to the DOM
+		const episodeInfo = screen.getByTestId('summary');
+		expect(episodeInfo).toBeInTheDocument();
 
-    // 👉 TASK: check that the alt text "episode image" is present
+		// 👉 TASK: check that the alt text "episode image" is present
+		const altText = screen.getByAltText('episode image');
+		expect(altText).toBeInTheDocument();
 
-    // 👉 TASK: rerender the component passing episode data lacking an image
-    // ❗ Study the Episode component to understand what happens in this case
+		// 👉 TASK: rerender the component passing episode data lacking an image
+		let mockData = {
+			...exampleEpisodeData,
+			image: '',
+		};
 
-    // 👉 TASK: check that the default image appears in the DOM
-    // ❗ Use querySelector to select the image by its src attribute
+		rerender(<Episode episode={mockData} />);
 
-    // 👉 TASK: check that the "generic episode image" alt text is present
+		// ❗ Study the Episode component to understand what happens in this case
 
-    // 👉 TASK: rerender the component passing an undefined episode
-    // ❗ Study the Episode component to understand what happens in this case
+		// 👉 TASK: check that the default image appears in the DOM
+		// ❗ Use querySelector to select the image by its src attribute
+		const img = screen.getByRole('img');
+		expect(img).toBeInTheDocument();
 
-    // 👉 TASK: check that the "Loading episode..." text is present
+		// 👉 TASK: check that the "generic episode image" alt text is present
+		expect(img.alt).toBe('generic episode image');
 
-  })
+		// 👉 TASK: rerender the component passing an undefined episode
+    rerender(<Episode episode={undefined} />);
+		// ❗ Study the Episode component to understand what happens in this case
+
+		// 👉 TASK: check that the "Loading episode..." text is present
+    const undefinedText = screen.getByText('Loading episode...');
+    expect(undefinedText).toBeInTheDocument()
+	})
 })
